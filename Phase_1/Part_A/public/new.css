@@ -1,0 +1,19 @@
+input {
+  width: 18rem;
+  height: 2rem;
+  border: 1.5px solid black;
+  border-radius: 2rem;
+  padding-left: 1rem;
+  background-color: aliceblue;
+}
+
+#description {
+  border: 1.5px solid black;
+  border-radius: 1rem;
+}
+
+button{
+    padding: 0.5rem;
+    background-color: aquamarine;
+    border-radius: 2rem;
+}

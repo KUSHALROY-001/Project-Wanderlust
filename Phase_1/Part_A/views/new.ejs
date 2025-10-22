@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Listing - Wanderlust</title>
+    <link rel="stylesheet" href="/new.css" />
+  </head>
+  <body>
+    <center>
+      <form action="/listing/new" method="post">
+        <input class="input" type="text" name="listing[title]" placeholder="Title" />
+        <br /><br />
+        <textarea
+          id="description"
+          class="input"
+          name="listing[description]"
+          cols="50"
+          rows="4"
+          placeholder="Description"
+        ></textarea>
+        <br /><br />
+        <input
+          class="input"
+          type="text"
+          name="listing[image]"
+          placeholder="Image link"
+        />
+        <br /><br />
+        <input
+          class="input"
+          type="number"
+          name="listing[price]"
+          placeholder="Price $xxx"
+        />
+        <br /><br />
+        <input
+          class="input"
+          type="text"
+          name="listing[location]"
+          placeholder="Location"
+        />
+        <br /><br />
+        <input class="input" type="text" name="listing[country]" placeholder="Country" />
+        <br /><br />
+        <button>Submit</button>
+      </form>
+    </center>
+  </body>
+</html>
