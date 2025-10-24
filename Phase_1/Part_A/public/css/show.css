@@ -1,0 +1,118 @@
+
+/* ====================== CSS on Show.ejs ============================ */
+.wanderlust-page {
+  background: linear-gradient(to bottom right, #f9f9f9, #f0f7f8);
+  padding-bottom: 60px;
+}
+
+.wanderlust-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2b2b2b;
+  margin-bottom: 10px;
+  display: inline-block;
+  padding: 10px 25px;
+  border-radius: 12px;
+  background: #fff;
+  border: 2px solid #e0c3a3;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.wanderlust-subtext {
+  color: #555;
+  font-size: 1rem;
+  margin-bottom: 40px;
+}
+
+/* Card container */
+.wanderlust-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  max-width: 700px;
+  margin-bottom: 50px;
+}
+
+/* Image */
+.wanderlust-img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  border-bottom: 4px solid #e0c3a3;
+}
+
+/* Card content */
+.wanderlust-body {
+  padding: 30px;
+}
+
+.wanderlust-heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2f2f2f;
+  margin-bottom: 12px;
+}
+
+.wanderlust-desc {
+  color: #6d6d6d;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  text-align: start;
+}
+
+/* Price & Location */
+.wanderlust-price {
+  display: inline-block;
+  background-color: #00a896;
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.wanderlust-location {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 25px;
+}
+
+/* Buttons */
+.wanderlust-btn {
+  border: none;
+  background: #0077b6;
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-weight: 500;
+  margin: 5px;
+  transition: all 0.3s ease;
+}
+
+.wanderlust-btn:hover {
+  background: #023e8a;
+  transform: translateY(-2px);
+}
+
+.delete-btn {
+  background: #e63946;
+}
+
+.delete-btn:hover {
+  background: #b5171d;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .wanderlust-img {
+    height: 280px;
+  }
+  .wanderlust-title {
+    font-size: 2rem;
+  }
+}
