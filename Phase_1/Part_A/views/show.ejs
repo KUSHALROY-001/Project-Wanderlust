@@ -1,48 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wanderlust</title>
-  </head>
-  <body>
-    <center>
-      <h2
-        style="
-          padding: 0.3rem;
-          border: 2px solid black;
-          border-radius: 0.5rem;
-          background-color: bisque;
-          width: fit-content;
-        "
-      >
-        Explore with Wanderlust
-      </h2>
-      <b><%= listing.title %></b>
-      <p><%= listing.description %></p>
-      <img
-        src="<%= listing.image %>"
-        alt="list item image"
-        style="width: 400px; height: 400px"
-      />
-      <h4
-        style="
-          padding: 0.3rem;
-          border: 1.5px solid black;
-          border-radius: 0.5rem;
-          background-color: rgb(80, 182, 80);
-          width: fit-content;
-        "
-      >
-        Price : $<%= listing.price %>
-      </h4>
-      <h3><%= listing.location %>, <%= listing.country %></h3>
-      <form action="/listing/edit/<%=listing._id%>" method="get">
-        <button>Edit this listing</button>
-      </form> <br>
-      <form action="/listing/delete/<%= listing._id %>?_method=DELETE" method="post">
-        <button>Delete listing</button>
-      </form>
-    </center>
-  </body>
-</html>
+<head>
+  <title>Wanderlust</title>
+</head>
+<body>
+  <% layout("/layouts/boilerplate.ejs") %>
+  <center>
+    <h2
+      style="
+        padding: 0.3rem;
+        border: 2px solid black;
+        border-radius: 0.5rem;
+        background-color: bisque;
+        width: fit-content;
+      "
+    >
+      Explore with Wanderlust
+    </h2>
+    <b><%= listing.title %></b>
+    <p><%= listing.description %></p>
+    <img
+      src="<%= listing.image %>"
+      alt="list item image"
+      style="width: 400px; height: 400px"
+    />
+    <h4
+      style="
+        padding: 0.3rem;
+        border: 1.5px solid black;
+        border-radius: 0.5rem;
+        background-color: rgb(80, 182, 80);
+        width: fit-content;
+      "
+    >
+      Price : $<%= listing.price %>
+    </h4>
+    <h3><%= listing.location %>, <%= listing.country %></h3>
+    <form action="/listing/edit/<%=listing._id%>" method="get">
+      <button>Edit this listing</button>
+    </form>
+    <br />
+    <form
+      action="/listing/delete/<%= listing._id %>?_method=DELETE"
+      method="post"
+    >
+      <button>Delete listing</button>
+    </form>
+  </center>
+</body>

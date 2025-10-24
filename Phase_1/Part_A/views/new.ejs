@@ -1,15 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>New Listing - Wanderlust</title>
     <link rel="stylesheet" href="/css/new.css" />
   </head>
   <body>
+    <% layout("/layouts/boilerplate.ejs") %>
     <center>
       <form action="/listing/new" method="post">
-        <input class="input" type="text" name="listing[title]" placeholder="Title" />
+        <input
+          class="input"
+          type="text"
+          name="listing[title]"
+          placeholder="Title"
+        />
         <br /><br />
         <textarea
           id="description"
@@ -41,10 +43,14 @@
           placeholder="Location"
         />
         <br /><br />
-        <input class="input" type="text" name="listing[country]" placeholder="Country" />
+        <input
+          class="input"
+          type="text"
+          name="listing[country]"
+          placeholder="Country"
+        />
         <br /><br />
         <button>Submit</button>
       </form>
     </center>
   </body>
-</html>
