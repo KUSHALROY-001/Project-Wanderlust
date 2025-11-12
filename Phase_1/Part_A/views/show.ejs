@@ -9,7 +9,6 @@
     <p class="wanderlust-subtext">
       Find your next dream escape around the world 🌍
     </p>
-
     <div class="wanderlust-card mx-auto">
       <img
         src="<%= listing.image %>"
@@ -18,18 +17,20 @@
       />
       <div class="wanderlust-body">
         <h3 class="wanderlust-heading"><%= listing.title %></h3>
-        <p class="wanderlust-desc">
-          <%= listing.description %>
-        </p>
+        <p class="wanderlust-desc"><%= listing.description %></p>
 
-        <div class="wanderlust-price">Price: $<%= listing.price %></div>
+        <div class="wanderlust-price">$<%= listing.price %>/week</div>
         <div class="wanderlust-location">
           <%= listing.location %>, <%= listing.country %>
         </div>
 
         <div class="d-flex justify-content-center flex-wrap">
-          <button class="wanderlust-btn edit-btn">Edit Listing</button>
-          <button class="wanderlust-btn delete-btn">Delete Listing</button>
+          <form action="/listing/edit/<%= listing._id %>" method="get">
+            <button class="wanderlust-btn edit-btn">Edit Listing</button> 
+          </form>
+          <form action="/listing/delete/<%= listing._id %>?_method=DELETE" method="post">
+            <button class="wanderlust-btn delete-btn">Delete Listing</button>
+          </form>
         </div>
       </div>
     </div>

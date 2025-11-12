@@ -6,7 +6,12 @@
   <% layout("/layouts/boilerplate.ejs") %>
   <div class="row">
     <div class="col-8 offset-2">
-      <form action="/listing/edit/<%=listing._id%>?_method=PUT" method="post">
+      <form
+        action="/listing/edit/<%=listing._id%>?_method=PUT"
+        method="post"
+        novalidate
+        class="needs-validation"
+      >
         <div class="mb-3">
           <label for="title" class="form-label">Title</label>
           <input
@@ -15,7 +20,9 @@
             name="listing[title]"
             placeholder="Enter Title"
             value="<%=listing.title%>"
+            required
           />
+          <div class="invalid-feedback">Please enter a title</div>
         </div>
         <div class="mb-3">
           <label for="description" class="form-label">Description</label>
@@ -26,7 +33,11 @@
             cols="50"
             rows="4"
             placeholder="Enter Description"
-          ><%=listing.description%></textarea>
+            required
+          >
+<%=listing.description%></textarea
+          >
+          <div class="invalid-feedback">Please enter a short description</div>
         </div>
         <div class="mb-3">
           <label for="image" class="form-label">Image link</label>
@@ -36,7 +47,9 @@
             name="listing[image]"
             placeholder="Enter Image link"
             value="<%=listing.image%>"
+            required
           />
+          <div class="invalid-feedback">Image link should be valid</div>
         </div>
         <div class="row">
           <div class="mb-3 col-md-4">
@@ -47,7 +60,9 @@
               name="listing[price]"
               placeholder="Price $xxx"
               value="<%=listing.price%>"
+              required
             />
+            <div class="invalid-feedback">Price should be valid</div>
           </div>
 
           <div class="mb-3 col-md-8">
@@ -58,7 +73,9 @@
               name="listing[country]"
               placeholder="Enter Country "
               value="<%=listing.country%>"
+              required
             />
+            <div class="invalid-feedback">Country name should be valid</div>
           </div>
         </div>
         <div class="mb-3">
@@ -69,7 +86,9 @@
             name="listing[location]"
             placeholder="Enter Location"
             value="<%=listing.location%>"
+            required
           />
+          <div class="invalid-feedback">Location should be valid</div>
         </div>
         <center>
           <button class="btn btn-dark">Submit changes</button>

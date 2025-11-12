@@ -112,7 +112,8 @@ app.put("/listing/edit/:id", (req, res) => {
 app.delete("/listing/delete/:id", (req, res) => {
   let { id } = req.params;
   Listing.findByIdAndDelete(id)
-    .then(() => {
+    .then((result) => {
+      console.log(result)
       res.redirect("/listings");
     })
     .catch((err) => {

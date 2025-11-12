@@ -5,7 +5,7 @@
   <% layout("/layouts/boilerplate.ejs") %>
   <div class="row">
     <div class="col-8 offset-2">
-      <form action="/listing/new" method="post">
+      <form action="/listing/new" method="post" novalidate class="needs-validation">
         <div class="mb-3">
           <label for="title" class="form-label">Title</label>
           <input
@@ -13,7 +13,9 @@
             type="text"
             name="listing[title]"
             placeholder="Enter Title"
+            required
           />
+          <div class="invalid-feedback">Please enter a title</div>
         </div>
         <div class="mb-3">
           <label for="description" class="form-label">Description</label>
@@ -24,7 +26,9 @@
             cols="50"
             rows="4"
             placeholder="Enter Description"
+            required
           ></textarea>
+          <div class="invalid-feedback">Please enter a short description</div>
         </div>
         <div class="mb-3">
           <label for="image" class="form-label">Image link</label>
@@ -33,7 +37,9 @@
             type="text"
             name="listing[image]"
             placeholder="Enter Image link"
+            required
           />
+          <div class="invalid-feedback">Image link should be valid</div>
         </div>
         <div class="row">
           <div class="mb-3 col-md-4">
@@ -43,7 +49,9 @@
               type="number"
               name="listing[price]"
               placeholder="Price $xxx"
+              required
             />
+            <div class="invalid-feedback">Price should be valid</div>
           </div>
 
           <div class="mb-3 col-md-8">
@@ -53,7 +61,9 @@
               type="text"
               name="listing[country]"
               placeholder="Enter Country "
+              required
             />
+            <div class="invalid-feedback">Country name should be valid</div>
           </div>
         </div>
         <div class="mb-3">
@@ -63,7 +73,9 @@
             type="text"
             name="listing[location]"
             placeholder="Enter Location"
+            required
           />
+          <div class="invalid-feedback">Location should be valid</div>
         </div>
         <center>
           <button class="btn btn-dark">Submit</button>
