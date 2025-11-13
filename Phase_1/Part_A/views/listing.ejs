@@ -7,13 +7,23 @@
   <form action="/listings/new" method="get">
     <button>add new listing</button>
   </form>
-  <ul>
+  <br />
+  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
     <% for(listing of allListing) { %>
-    <li>
-      <a href="http://localhost:8080/listing/<%=listing._id %>"
-        ><%=listing.title%></a
-      >
-    </li>
+    <a href="/listing/<%= listing._id %>" class="listing-link">
+      <div class="card col">
+        <div class="card-img-overlay"></div>
+        <img src="<%= listing.image %>" class="card-img-top" alt="..." />
+        <div class="card-body">
+          <p class="card-text">
+            <b>
+              <%= listing.title %> <br />
+              $</b
+            ><%= listing.price %>/week
+          </p>
+        </div>
+      </div>
+    </a>
     <% } %>
-  </ul>
+  </div>
 </body>

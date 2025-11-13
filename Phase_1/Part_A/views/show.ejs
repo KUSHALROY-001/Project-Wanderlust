@@ -1,48 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wanderlust</title>
-  </head>
-  <body>
-    <center>
-      <h2
-        style="
-          padding: 0.3rem;
-          border: 2px solid black;
-          border-radius: 0.5rem;
-          background-color: bisque;
-          width: fit-content;
-        "
-      >
-        Explore with Wanderlust
-      </h2>
-      <b><%= listing.title %></b>
-      <p><%= listing.description %></p>
+<head>
+  <title>Explore with Wanderlust</title>
+  <link rel="stylesheet" href="/css/show.css" />
+</head>
+<body>
+  <% layout("/layouts/boilerplate.ejs") %>
+  <div class="wanderlust-page container text-center">
+    <h1 class="wanderlust-title">Explore with Wanderlust</h1>
+    <p class="wanderlust-subtext">
+      Find your next dream escape around the world 🌍
+    </p>
+
+    <div class="wanderlust-card mx-auto">
       <img
         src="<%= listing.image %>"
-        alt="list item image"
-        style="width: 400px; height: 400px"
+        alt="listing image"
+        class="wanderlust-img"
       />
-      <h4
-        style="
-          padding: 0.3rem;
-          border: 1.5px solid black;
-          border-radius: 0.5rem;
-          background-color: rgb(80, 182, 80);
-          width: fit-content;
-        "
-      >
-        Price : $<%= listing.price %>
-      </h4>
-      <h3><%= listing.location %>, <%= listing.country %></h3>
-      <form action="/listing/edit/<%=listing._id%>" method="get">
-        <button>Edit this listing</button>
-      </form> <br>
-      <form action="/listing/delete/<%= listing._id %>?_method=DELETE" method="post">
-        <button>Delete listing</button>
-      </form>
-    </center>
-  </body>
-</html>
+      <div class="wanderlust-body">
+        <h3 class="wanderlust-heading"><%= listing.title %></h3>
+        <p class="wanderlust-desc">
+          <%= listing.description %>
+        </p>
+
+        <div class="wanderlust-price">Price: $<%= listing.price %></div>
+        <div class="wanderlust-location">
+          <%= listing.location %>, <%= listing.country %>
+        </div>
+
+        <div class="d-flex justify-content-center flex-wrap">
+          <button class="wanderlust-btn edit-btn">Edit Listing</button>
+          <button class="wanderlust-btn delete-btn">Delete Listing</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
