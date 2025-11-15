@@ -1,3 +1,20 @@
+/* === Sticky Footer Fix === */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-wrap {
+  flex: 1; /* Pushes footer down when content is short */
+}
+
 body{
   font-family: "Plus Jakarta Sans", sans-serif;
   font-optical-sizing: auto;
