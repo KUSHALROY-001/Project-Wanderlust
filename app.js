@@ -30,13 +30,22 @@ main()
     console.log("Unable to connect to Mongodb : ", err);
   });
 
-app.get("/", (req, res, next) => {
+app.get("/", (req, res) => {
   res.send("It is the index Route");
 });
 
+const validateListing = (req, res, next) => {
+  let { error } = ListingSchema.validate(req.body);
+  if (error) {
+    let msg = error.details.map((el) => el.message).join(",");
+    throw new CustomError(400, msg);
+  } else {
+    next();
+  }
+};
 // All Listing Route
 app.get(
-  "/listings",       
+  "/listings",
   wrapAsync(async (req, res) => {
     Listing.find()
       .then((allListing) => {
@@ -71,6 +80,7 @@ app.get("/listings/new", (req, res) => {
 
 app.post(
   "/listing/new",
+  validateListing,
   wrapAsync(async (req, res, next) => {
     // let { title, description, image, price, location, country } = req.body;
     // let data = {
@@ -81,12 +91,7 @@ app.post(
     //   location: location,
     //   country: country,
     // };
-    let result = ListingSchema.validate(req.body);
-    if (result.error) {
-      let msg = result.error.details.map((el) => el.message).join(",");
-      throw new CustomError(400, msg);
-    } 
-
+    
     Listing.create(req.body.listing)
       .then((result) => {
         console.log(result);
@@ -111,12 +116,9 @@ app.get(
 
 app.put(
   "/listing/edit/:id",
+  validateListing,
   wrapAsync(async (req, res) => {
-    if (!req.body.listing) {
-      throw new CustomError(400, "Invalid Listing Data");
-    }
-
-    let { id } = req.params;
+       let { id } = req.params;
     Listing.findByIdAndUpdate(
       id,
       { $set: req.body.listing },
