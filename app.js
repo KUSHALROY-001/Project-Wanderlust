@@ -9,6 +9,7 @@ const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const CustomError = require("./utils/CustomError.js");
 const { wrap } = require("module");
+const ListingSchema = require("./schema.js");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -35,7 +36,7 @@ app.get("/", (req, res, next) => {
 
 // All Listing Route
 app.get(
-  "/listings",
+  "/listings",       
   wrapAsync(async (req, res) => {
     Listing.find()
       .then((allListing) => {
@@ -80,9 +81,11 @@ app.post(
     //   location: location,
     //   country: country,
     // };
-    if (!req.body.listing) {
-      throw new CustomError(400, "Invalid Listing Data");
-    }
+    let result = ListingSchema.validate(req.body);
+    if (result.error) {
+      let msg = result.error.details.map((el) => el.message).join(",");
+      throw new CustomError(400, msg);
+    } 
 
     Listing.create(req.body.listing)
       .then((result) => {

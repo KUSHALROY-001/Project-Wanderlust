@@ -4,9 +4,6 @@
 <body>
   <% layout("/layouts/boilerplate.ejs") %>
   <h3>All Listings</h3>
-  <form action="/listings/new" method="get">
-    <button>add new listing</button>
-  </form>
   <br />
   <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-2">
     <% for(listing of allListing) { %>
