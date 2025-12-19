@@ -96,6 +96,7 @@
 .wanderlust-btn:hover {
   background: #023e8a;
   transform: translateY(-2px);
+  border-radius: 2rem;
 }
 
 .delete-btn {
@@ -104,6 +105,7 @@
 
 .delete-btn:hover {
   background: #b5171d;
+  border-radius: 2rem;
 }
 
 /* Responsive */
@@ -115,6 +117,8 @@
     font-size: 2rem;
   }
 }
+
+/* ==========Review Section========== */
 
 .review {
   text-align: start;
@@ -134,4 +138,16 @@
 }
 .review-btn:hover {
   background-color: rgb(35, 196, 54);
+  border-radius: 2rem;
+}
+
+.review-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  max-width: 600px;
+  margin: 1rem 0.5rem 0.5rem 0.5rem !important;
+  padding: 20px;
 }

@@ -74,7 +74,7 @@ app.get(
   "/listing/:id",
   wrapAsync(async (req, res) => {
     let { id } = req.params;
-    Listing.findById(id)
+    Listing.findById(id).populate("reviews")
       .then((listing) => {
         res.render("show.ejs", { listing });
       })
@@ -171,11 +171,11 @@ app.post(
     await review
       .save()
       .then((result) => {
-        console.log("Review Saved: ", result);
+        console.log("Review Saved");
         listing
           .save()
           .then((result) => {
-            console.log("Listing Updated with Review: ", result);
+            console.log("Listing Updated with Review");
           })
           .catch((err) => {
             console.log("Error in Updating Listing with Review: ", err);

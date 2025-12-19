@@ -37,9 +37,29 @@
         </div>
       </div>
       <hr />
+
+      <h3><b>All Reviews</b></h3>
+      <div class="row ">
+        <% listing.reviews.forEach(function(review) { %>
+        <div class="mb-3 col-6">
+          <div class="card review-card">
+            <div class="card-body">
+              <h5 class="card-title">Rating: <%= review.rating %>/5</h5>
+              <p class="card-text"><%= review.comment %></p>
+            </div>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+
       <div class="review">
         <h3>Leave a Review</h3>
-        <form action="/listing/<%= listing._id %>/review" method="post" novalidate class="needs-validation">
+        <form
+          action="/listing/<%= listing._id %>/review"
+          method="post"
+          novalidate
+          class="needs-validation"
+        >
           <div>
             <label for="rating" class="form-label">Rating</label>
             <input
@@ -52,7 +72,12 @@
           </div>
           <div>
             <label for="comment" class="form-label">Comments</label> <br />
-            <textarea name="review[comment]" id="comment" required class="form-control"></textarea>
+            <textarea
+              name="review[comment]"
+              id="comment"
+              required
+              class="form-control"
+            ></textarea>
             <div class="invalid-feedback">Please enter a comment.</div>
           </div>
           <button class="wanderlust-btn review-btn">Submit</button>
