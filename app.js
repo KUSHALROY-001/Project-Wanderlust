@@ -10,6 +10,8 @@ const wrapAsync = require("./utils/wrapAsync.js");
 const CustomError = require("./utils/CustomError.js");
 const { wrap } = require("module");
 const ListingSchema = require("./schema.js");
+const Review = require("./models/review.js");
+const { link } = require("fs");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -35,8 +37,14 @@ app.get("/", (req, res) => {
 });
 
 const validateListing = (req, res, next) => {
-  let { error } = ListingSchema.validate(req.body);
+  // Validate the nested "listing" object when the form posts as listing[...],
+  // otherwise validate req.body directly. This prevents Joi errors like
+  // "listing is not allowed" when the schema expects the listing fields at root.
+  const dataToValidate =
+    req.body && req.body.listing ? req.body.listing : req.body;
+  let { error } = ListingSchema.validate(dataToValidate);
   if (error) {
+    console.log("Error is triggered");
     let msg = error.details.map((el) => el.message).join(",");
     throw new CustomError(400, msg);
   } else {
@@ -91,7 +99,8 @@ app.post(
     //   location: location,
     //   country: country,
     // };
-    
+    console.log(req.body.listing);
+
     Listing.create(req.body.listing)
       .then((result) => {
         console.log(result);
@@ -118,7 +127,7 @@ app.put(
   "/listing/edit/:id",
   validateListing,
   wrapAsync(async (req, res) => {
-       let { id } = req.params;
+    let { id } = req.params;
     Listing.findByIdAndUpdate(
       id,
       { $set: req.body.listing },
@@ -150,11 +159,38 @@ app.delete(
   })
 );
 
+app.post(
+  "/listing/:id/review",
+  wrapAsync(async (req, res) => {
+    let listing = await Listing.findById(req.params.id);
+    let review = new Review(req.body.review);
+    listing.reviews.push(review);
+    await review
+      .save()
+      .then((result) => {
+        console.log("Review Saved: ", result);
+        listing
+          .save()
+          .then((result) => {
+            console.log("Listing Updated with Review: ", result);
+          })
+          .catch((err) => {
+            console.log("Error in Updating Listing with Review: ", err);
+          });
+      })
+      .catch((err) => {
+        console.log("Error in Saving Review: ", err);
+      });
+
+    res.redirect(`/listing/${req.params.id}`);
+  })
+);
+
 // Catch-all for unmatched routes. Use `app.use` instead of `app.all("*", ...)`
 // to avoid path-to-regexp parsing errors for bare `*` patterns.
-app.use((req, res, next) => {
-  next(new CustomError(404, "Page Not Found"));
-});
+// app.use((req, res, next) => {
+//   next(new CustomError(404, "Page Not Found"));
+// });
 // ========== MiddleWare =========
 app.use((err, req, res, next) => {
   let { statusCode = 500, message = "Something Went Wrong" } = err;

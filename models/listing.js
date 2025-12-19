@@ -37,10 +37,10 @@ const listSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  reviews: {
+  reviews: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Review",
-  },
+  }],
 });
 
 const Listing = mongoose.model("Listing", listSchema);

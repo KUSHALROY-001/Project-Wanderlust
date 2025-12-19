@@ -39,7 +39,7 @@
       <hr />
       <div class="review">
         <h3>Leave a Review</h3>
-        <form action="" method="post">
+        <form action="/listing/<%= listing._id %>/review" method="post" novalidate class="needs-validation">
           <div>
             <label for="rating" class="form-label">Rating</label>
             <input
@@ -52,7 +52,8 @@
           </div>
           <div>
             <label for="comment" class="form-label">Comments</label> <br />
-            <textarea name="review[comment]" id="comment" class="form-control"></textarea>
+            <textarea name="review[comment]" id="comment" required class="form-control"></textarea>
+            <div class="invalid-feedback">Please enter a comment.</div>
           </div>
           <button class="wanderlust-btn review-btn">Submit</button>
         </form>
