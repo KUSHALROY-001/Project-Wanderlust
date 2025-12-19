@@ -9,7 +9,7 @@ const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const CustomError = require("./utils/CustomError.js");
 const { wrap } = require("module");
-const ListingSchema = require("./schema.js");
+const {ListingSchema, ReviewSchema} = require("./schema.js");
 const Review = require("./models/review.js");
 const { link } = require("fs");
 
@@ -37,14 +37,17 @@ app.get("/", (req, res) => {
 });
 
 const validateListing = (req, res, next) => {
-  // Validate the nested "listing" object when the form posts as listing[...],
-  // otherwise validate req.body directly. This prevents Joi errors like
-  // "listing is not allowed" when the schema expects the listing fields at root.
-  const dataToValidate =
-    req.body && req.body.listing ? req.body.listing : req.body;
-  let { error } = ListingSchema.validate(dataToValidate);
+  let { error } = ListingSchema.validate(req.body.listing);
   if (error) {
-    console.log("Error is triggered");
+    let msg = error.details.map((el) => el.message).join(",");
+    throw new CustomError(400, msg);
+  } else {
+    next();
+  }
+};
+const validateReview = (req, res, next) => {
+  let { error } = ReviewSchema.validate(req.body.review);
+  if (error) {
     let msg = error.details.map((el) => el.message).join(",");
     throw new CustomError(400, msg);
   } else {
@@ -160,7 +163,7 @@ app.delete(
 );
 
 app.post(
-  "/listing/:id/review",
+  "/listing/:id/review", validateReview,
   wrapAsync(async (req, res) => {
     let listing = await Listing.findById(req.params.id);
     let review = new Review(req.body.review);
