@@ -151,3 +151,10 @@
   margin: 1rem 0.5rem 0.5rem 0.5rem !important;
   padding: 20px;
 }
+
+.delete-review-btn {
+  background-color: #e6da39;
+}
+.delete-review-btn:hover {
+  background-color: #e63946;
+}

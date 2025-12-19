@@ -46,6 +46,11 @@
             <div class="card-body">
               <h5 class="card-title">Rating: <%= review.rating %>/5</h5>
               <p class="card-text"><%= review.comment %></p>
+              <form action="/listing/<%= listing._id %>/review/<%= review._id %>?_method=DELETE" method="post">
+                <button class="wanderlust-btn delete-review-btn">
+                  Delete Review
+                </button>
+              </form>
             </div>
           </div>
         </div>

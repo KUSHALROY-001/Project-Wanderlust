@@ -9,7 +9,7 @@ const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const CustomError = require("./utils/CustomError.js");
 const { wrap } = require("module");
-const {ListingSchema, ReviewSchema} = require("./schema.js");
+const { ListingSchema, ReviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
 const { link } = require("fs");
 
@@ -74,7 +74,8 @@ app.get(
   "/listing/:id",
   wrapAsync(async (req, res) => {
     let { id } = req.params;
-    Listing.findById(id).populate("reviews")
+    Listing.findById(id)
+      .populate("reviews")
       .then((listing) => {
         res.render("show.ejs", { listing });
       })
@@ -162,30 +163,33 @@ app.delete(
   })
 );
 
+// ========== Review Route =========
+// Create Review
 app.post(
-  "/listing/:id/review", validateReview,
+  "/listing/:id/review",
+  validateReview,
   wrapAsync(async (req, res) => {
-    let listing = await Listing.findById(req.params.id);
-    let review = new Review(req.body.review);
-    listing.reviews.push(review);
-    await review
-      .save()
-      .then((result) => {
-        console.log("Review Saved");
-        listing
-          .save()
-          .then((result) => {
-            console.log("Listing Updated with Review");
-          })
-          .catch((err) => {
-            console.log("Error in Updating Listing with Review: ", err);
-          });
-      })
-      .catch((err) => {
-        console.log("Error in Saving Review: ", err);
-      });
+    const listing = await Listing.findById(req.params.id);
+    const review = new Review(req.body.review);
 
+    listing.reviews.push(review);
+
+    await review.save();
+    await listing.save();
+
+    console.log("Review Saved & Listing Updated");
     res.redirect(`/listing/${req.params.id}`);
+  })
+);
+// Delete Review
+app.delete(
+  "/listing/:id/review/:reviewId", 
+  wrapAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    console.log("Review Deleted");
+    res.redirect(`/listing/${id}`);
   })
 );
 
