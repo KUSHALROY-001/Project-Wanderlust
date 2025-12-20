@@ -9,7 +9,9 @@ const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const CustomError = require("./utils/CustomError.js");
 const { wrap } = require("module");
-const ListingSchema = require("./schema.js");
+const { ListingSchema, ReviewSchema } = require("./schema.js");
+const Review = require("./models/review.js");
+const { link } = require("fs");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -35,7 +37,16 @@ app.get("/", (req, res) => {
 });
 
 const validateListing = (req, res, next) => {
-  let { error } = ListingSchema.validate(req.body);
+  let { error } = ListingSchema.validate(req.body.listing);
+  if (error) {
+    let msg = error.details.map((el) => el.message).join(",");
+    throw new CustomError(400, msg);
+  } else {
+    next();
+  }
+};
+const validateReview = (req, res, next) => {
+  let { error } = ReviewSchema.validate(req.body.review);
   if (error) {
     let msg = error.details.map((el) => el.message).join(",");
     throw new CustomError(400, msg);
@@ -64,6 +75,7 @@ app.get(
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     Listing.findById(id)
+      .populate("reviews")
       .then((listing) => {
         res.render("show.ejs", { listing });
       })
@@ -91,7 +103,8 @@ app.post(
     //   location: location,
     //   country: country,
     // };
-    
+    console.log(req.body.listing);
+
     Listing.create(req.body.listing)
       .then((result) => {
         console.log(result);
@@ -118,7 +131,7 @@ app.put(
   "/listing/edit/:id",
   validateListing,
   wrapAsync(async (req, res) => {
-       let { id } = req.params;
+    let { id } = req.params;
     Listing.findByIdAndUpdate(
       id,
       { $set: req.body.listing },
@@ -150,11 +163,41 @@ app.delete(
   })
 );
 
+// ========== Review Route =========
+// Create Review
+app.post(
+  "/listing/:id/review",
+  validateReview,
+  wrapAsync(async (req, res) => {
+    const listing = await Listing.findById(req.params.id);
+    const review = new Review(req.body.review);
+
+    listing.reviews.push(review);
+
+    await review.save();
+    await listing.save();
+
+    console.log("Review Saved & Listing Updated");
+    res.redirect(`/listing/${req.params.id}`);
+  })
+);
+// Delete Review
+app.delete(
+  "/listing/:id/review/:reviewId", 
+  wrapAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    console.log("Review Deleted");
+    res.redirect(`/listing/${id}`);
+  })
+);
+
 // Catch-all for unmatched routes. Use `app.use` instead of `app.all("*", ...)`
 // to avoid path-to-regexp parsing errors for bare `*` patterns.
-app.use((req, res, next) => {
-  next(new CustomError(404, "Page Not Found"));
-});
+// app.use((req, res, next) => {
+//   next(new CustomError(404, "Page Not Found"));
+// });
 // ========== MiddleWare =========
 app.use((err, req, res, next) => {
   let { statusCode = 500, message = "Something Went Wrong" } = err;

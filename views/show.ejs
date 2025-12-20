@@ -26,12 +26,67 @@
 
         <div class="d-flex justify-content-center flex-wrap">
           <form action="/listing/edit/<%= listing._id %>" method="get">
-            <button class="wanderlust-btn edit-btn">Edit Listing</button> 
+            <button class="wanderlust-btn edit-btn">Edit Listing</button>
           </form>
-          <form action="/listing/delete/<%= listing._id %>?_method=DELETE" method="post">
+          <form
+            action="/listing/delete/<%= listing._id %>?_method=DELETE"
+            method="post"
+          >
             <button class="wanderlust-btn delete-btn">Delete Listing</button>
           </form>
         </div>
+      </div>
+      <hr />
+
+      <h3><b>All Reviews</b></h3>
+      <div class="row ">
+        <% listing.reviews.forEach(function(review) { %>
+        <div class="mb-3 col-6">
+          <div class="card review-card">
+            <div class="card-body">
+              <h5 class="card-title">Rating: <%= review.rating %>/5</h5>
+              <p class="card-text"><%= review.comment %></p>
+              <form action="/listing/<%= listing._id %>/review/<%= review._id %>?_method=DELETE" method="post">
+                <button class="wanderlust-btn delete-review-btn">
+                  Delete Review
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+
+      <div class="review">
+        <h3>Leave a Review</h3>
+        <form
+          action="/listing/<%= listing._id %>/review"
+          method="post"
+          novalidate
+          class="needs-validation"
+        >
+          <div>
+            <label for="rating" class="form-label">Rating</label>
+            <input
+              type="range"
+              name="review[rating]"
+              min="1"
+              max="5"
+              id="rating"
+            />
+          </div>
+          <div>
+            <label for="comment" class="form-label">Comments</label> <br />
+            <textarea
+              name="review[comment]"
+              id="comment"
+              required
+              class="form-control"
+            ></textarea>
+            <div class="invalid-feedback">Please enter a comment.</div>
+          </div>
+          <button class="wanderlust-btn review-btn">Submit</button>
+        </form>
       </div>
     </div>
   </div>

@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { type } = require("os");
 
 async function main() {
   await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
@@ -38,6 +37,18 @@ const listSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  reviews: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Review",
+  }],
+});
+
+listSchema.post("findOneAndDelete", async function (listing) {
+  if (listing) {
+    await mongoose.model("Review").deleteMany({
+      _id: { $in: listing.reviews },
+    });
+  }
 });
 
 const Listing = mongoose.model("Listing", listSchema);
