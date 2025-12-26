@@ -7,6 +7,9 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
+const flash = require("connect-flash");
+const session = require("express-session");
+const CustomError = require("./utils/CustomError.js");
 
 
 app.set("view engine", "ejs");
@@ -15,6 +18,17 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
+
+app.use(session({
+  secret : "wanderlustsecret",
+  resave : false,
+  saveUninitialized : true,
+  cookieOptions : {
+    httpOnly : true,
+    expires : Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge : 7 * 24 * 60 * 60 * 1000
+  }
+}))
 
 async function main() {
   await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
