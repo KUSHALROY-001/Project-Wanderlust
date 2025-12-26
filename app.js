@@ -23,12 +23,21 @@ app.use(session({
   secret : "wanderlustsecret",
   resave : false,
   saveUninitialized : true,
-  cookieOptions : {
+  cookie : {
     httpOnly : true,
     expires : Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge : 7 * 24 * 60 * 60 * 1000
   }
 }))
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  // console.log(res.session);
+  next();
+});
+
 
 async function main() {
   await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");

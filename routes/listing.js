@@ -45,6 +45,7 @@ router.post(
     Listing.create(req.body.listing)
       .then((result) => {
         console.log(result);
+        req.flash("success", "Successfully Created a new Listing!");
         res.redirect("/listings");
       })
       .catch((err) => {
@@ -61,6 +62,10 @@ router.get(
     Listing.findById(id)
       .populate("reviews")
       .then((listing) => {
+        if (!listing) {
+          req.flash("error", "Cannot find that listing!");
+          return res.redirect("/listings");
+        }
         res.render("show.ejs", { listing });
       })
       .catch((err) => {
@@ -91,6 +96,7 @@ router.put(
       { new: true, runValidators: true }
     )
       .then((result) => {
+        req.flash("success", "Successfully Updated the Listing!");
         res.redirect(`/listings/${id}`);
       })
       .catch((err) => {
@@ -107,6 +113,7 @@ router.delete(
     Listing.findByIdAndDelete(id)
       .then((result) => {
         console.log(result);
+        req.flash("success", "Successfully Deleted the Listing!");
         res.redirect("/listings");
       })
       .catch((err) => {

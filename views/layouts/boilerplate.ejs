@@ -27,12 +27,11 @@
   <body>
     <div class="page-container">
       <!-- Navbar -->
-      <%- include("../includes/navbar.ejs") %>
+      <%- include("../includes/navbar.ejs") %> 
+      <%- include("../includes/flash.ejs") %>
 
       <!-- Main Page Content -->
-      <main class="content-wrap container">
-        <%- body %>
-      </main>
+      <main class="content-wrap container"><%- body %></main>
 
       <!-- Footer -->
       <%- include("../includes/footer.ejs") %>
