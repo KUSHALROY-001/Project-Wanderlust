@@ -2,16 +2,15 @@ const express = require("express");
 const mongoose = require("mongoose");
 const ejs = require("ejs");
 const app = express();
-const Listing = require("./models/listing.js");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const wrapAsync = require("./utils/wrapAsync.js");
+const listings = require("./routes/listing.js");
+const reviews = require("./routes/review.js");
+const flash = require("connect-flash");
+const session = require("express-session");
 const CustomError = require("./utils/CustomError.js");
-const { wrap } = require("module");
-const { ListingSchema, ReviewSchema } = require("./schema.js");
-const Review = require("./models/review.js");
-const { link } = require("fs");
+
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -20,184 +19,50 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 
+app.use(session({
+  secret : "wanderlustsecret",
+  resave : false,
+  saveUninitialized : true,
+  cookie : {
+    httpOnly : true,
+    expires : Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge : 7 * 24 * 60 * 60 * 1000
+  }
+}))
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  // console.log(res.session);
+  next();
+});
+
+
 async function main() {
   await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
 }
 
 main()
-  .then(() => {
-    console.log("Connected to MongoDb");
-  })
-  .catch((err) => {
-    console.log("Unable to connect to Mongodb : ", err);
-  });
+.then(() => {
+  console.log("Connected to MongoDb");
+})
+.catch((err) => {
+  console.log("Unable to connect to Mongodb : ", err);
+});
 
 app.get("/", (req, res) => {
   res.send("It is the index Route");
 });
 
-const validateListing = (req, res, next) => {
-  let { error } = ListingSchema.validate(req.body.listing);
-  if (error) {
-    let msg = error.details.map((el) => el.message).join(",");
-    throw new CustomError(400, msg);
-  } else {
-    next();
-  }
-};
-const validateReview = (req, res, next) => {
-  let { error } = ReviewSchema.validate(req.body.review);
-  if (error) {
-    let msg = error.details.map((el) => el.message).join(",");
-    throw new CustomError(400, msg);
-  } else {
-    next();
-  }
-};
-// All Listing Route
-app.get(
-  "/listings",
-  wrapAsync(async (req, res) => {
-    Listing.find()
-      .then((allListing) => {
-        res.render("listing.ejs", { allListing });
-      })
-      .catch((err) => {
-        res.send("Error in Showing All Listings: ", err);
-        console.log(err);
-      });
-  })
-);
-
-// Show route
-app.get(
-  "/listing/:id",
-  wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    Listing.findById(id)
-      .populate("reviews")
-      .then((listing) => {
-        res.render("show.ejs", { listing });
-      })
-      .catch((err) => {
-        res.send("Error in Show Individual Listing : ", err);
-      });
-  })
-);
-
-// New Route
-app.get("/listings/new", (req, res) => {
-  res.render("new.ejs");
-});
-
-app.post(
-  "/listing/new",
-  validateListing,
-  wrapAsync(async (req, res, next) => {
-    // let { title, description, image, price, location, country } = req.body;
-    // let data = {
-    //   title: title,
-    //   description: description,
-    //   image: image,
-    //   price: price,
-    //   location: location,
-    //   country: country,
-    // };
-    console.log(req.body.listing);
-
-    Listing.create(req.body.listing)
-      .then((result) => {
-        console.log(result);
-        res.redirect("/listings");
-      })
-      .catch((err) => {
-        next(new CustomError(400, "Invalid Listing Data"));
-      });
-  })
-);
-
-// Edit Route
-app.get(
-  "/listing/edit/:id",
-  wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    Listing.findById(id).then((listing) => {
-      res.render("edit.ejs", { listing });
-    });
-  })
-);
-
-app.put(
-  "/listing/edit/:id",
-  validateListing,
-  wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    Listing.findByIdAndUpdate(
-      id,
-      { $set: req.body.listing },
-      { new: true, runValidators: true }
-    )
-      .then((result) => {
-        res.redirect(`/listing/${id}`);
-      })
-      .catch((err) => {
-        console.log("error find in updation", err);
-      });
-  })
-);
-
-// Delete Route
-app.delete(
-  "/listing/delete/:id",
-  wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    Listing.findByIdAndDelete(id)
-      .then((result) => {
-        console.log(result);
-        res.redirect("/listings");
-      })
-      .catch((err) => {
-        res.send("Error in Deletion");
-        console.log(err);
-      });
-  })
-);
-
-// ========== Review Route =========
-// Create Review
-app.post(
-  "/listing/:id/review",
-  validateReview,
-  wrapAsync(async (req, res) => {
-    const listing = await Listing.findById(req.params.id);
-    const review = new Review(req.body.review);
-
-    listing.reviews.push(review);
-
-    await review.save();
-    await listing.save();
-
-    console.log("Review Saved & Listing Updated");
-    res.redirect(`/listing/${req.params.id}`);
-  })
-);
-// Delete Review
-app.delete(
-  "/listing/:id/review/:reviewId", 
-  wrapAsync(async (req, res) => {
-    const { id, reviewId } = req.params;
-    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-    await Review.findByIdAndDelete(reviewId);
-    console.log("Review Deleted");
-    res.redirect(`/listing/${id}`);
-  })
-);
+app.use("/listings", listings);
+app.use("/listings/:id/reviews", reviews);
 
 // Catch-all for unmatched routes. Use `app.use` instead of `app.all("*", ...)`
 // to avoid path-to-regexp parsing errors for bare `*` patterns.
-// app.use((req, res, next) => {
-//   next(new CustomError(404, "Page Not Found"));
-// });
+app.use((req, res, next) => {
+  next(new CustomError(404, "Page Not Found"));
+});
 // ========== MiddleWare =========
 app.use((err, req, res, next) => {
   let { statusCode = 500, message = "Something Went Wrong" } = err;
