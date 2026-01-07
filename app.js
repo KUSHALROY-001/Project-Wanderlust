@@ -5,8 +5,9 @@ const app = express();
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const listings = require("./routes/listing.js");
-const reviews = require("./routes/review.js");
+const listingsRouter = require("./routes/listing.js");
+const reviewsRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
 const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("passport");
@@ -64,8 +65,9 @@ app.get("/", (req, res) => {
   res.send("It is the index Route");
 });
 
-app.use("/listings", listings);
-app.use("/listings/:id/reviews", reviews);
+app.use("/listings", listingsRouter);
+app.use("/listings/:id/reviews", reviewsRouter);
+app.use("/", userRouter);
 
 // Catch-all for unmatched routes. Use `app.use` instead of `app.all("*", ...)`
 // to avoid path-to-regexp parsing errors for bare `*` patterns.
