@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
 const User = require("../models/user.js");
+const passport = require("passport");
 
 // Signup Route
 router.get("/signup", (req, res) => {
@@ -21,6 +22,29 @@ router.post(
     } catch (err) {
       req.flash("error", err.message);
       res.redirect("/signup");
+    }
+  })
+);
+
+router.get("/login", (req, res) => {
+  res.render("login.ejs");
+});
+
+router.post(
+  "/login",
+  passport.authenticate("local", {
+    failureFlash: true,
+    failureRedirect: "/login",
+  }),
+  wrapAsync(async (req, res) => {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      req.flash("error", "Please enter a valid email");
+      res.redirect("/login");
+    } else {
+      req.flash("success", "Welcome back to Wanderlust!");
+      res.redirect("/listings");
     }
   })
 );
