@@ -17,8 +17,13 @@ router.post(
       const newUser = new User({ username, email });
       const registeredUser = await User.register(newUser, password);
       console.log(registeredUser);
-      req.flash("success", "Welcome to Wanderlust!");
-      res.redirect("/listings");
+      req.logIn(registeredUser, (err) => {  //req.logIn is a passport method
+        if (err) {
+          return next(err);
+        }
+        req.flash("success", "Welcome to Wanderlust!");
+        res.redirect("/listings");
+      });
     } catch (err) {
       req.flash("error", err.message);
       res.redirect("/signup");
