@@ -26,6 +26,7 @@ router.post(
   })
 );
 
+// Login Route
 router.get("/login", (req, res) => {
   res.render("login.ejs");
 });
@@ -49,4 +50,14 @@ router.post(
   })
 );
 
+// Logout Route
+router.get("/logout", (req, res, next) => {
+  req.logOut((err) => {
+    if (err) {
+      return next(err);
+    }
+    req.flash("success", "Succussfully logout");
+    res.redirect("/listings");
+  });
+});
 module.exports = router;
