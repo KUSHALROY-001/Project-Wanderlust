@@ -4,7 +4,7 @@ const Listing = require("../models/listing.js");
 const wrapAsync = require("../utils/wrapAsync.js");
 const CustomError = require("../utils/CustomError.js");
 const { ListingSchema } = require("../schema.js");
-const isloggedIn = require("../middleware.js");
+const { isLoggedIn } = require("../middleware.js");
 
 const validateListing = (req, res, next) => {
   let { error } = ListingSchema.validate(req.body.listing);
@@ -32,13 +32,13 @@ router.get(
 );
 
 // New Route
-router.get("/new", isloggedIn, (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
   res.render("new.ejs");
 });
 
 router.post(
   "/new",
-  isloggedIn,
+  isLoggedIn,
   validateListing,
   wrapAsync(async (req, res, next) => {
     console.log(req.body.listing);
@@ -78,7 +78,7 @@ router.get(
 // Edit Route
 router.get(
   "/edit/:id",
-  isloggedIn,
+  isLoggedIn,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     Listing.findById(id).then((listing) => {
@@ -89,7 +89,7 @@ router.get(
 
 router.put(
   "/edit/:id",
-  isloggedIn, //Checking for logged in this route(similiar) to avoid third party request as like from "hoppscotch"
+  isLoggedIn, //Checking for logged in this route(similiar) to avoid third party request as like from "hoppscotch"
   validateListing,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
@@ -111,7 +111,7 @@ router.put(
 // Delete Route
 router.delete(
   "/delete/:id",
-  isloggedIn,
+  isLoggedIn,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     Listing.findByIdAndDelete(id)
