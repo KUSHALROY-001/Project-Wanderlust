@@ -1,4 +1,7 @@
-const Listing = require("./models/listing")
+const Listing = require("./models/listing");
+const CustomError = require("./utils/CustomError.js");
+const { ListingSchema } = require("./schema.js");
+const { ReviewSchema } = require("./schema.js");
 
 const isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
@@ -25,4 +28,25 @@ const isOwner = async (req, res, next) => {
   next();
 };
 
-module.exports = { isLoggedIn, isOwner, redirectUrl };
+const validateListing = (req, res, next) => {
+  let { error } = ListingSchema.validate(req.body.listing);
+  if (error) {
+    let msg = error.details.map((el) => el.message).join(",");
+    throw new CustomError(400, msg);
+  } else {
+    next();
+  }
+};
+
+
+const validateReview = (req, res, next) => {
+  let { error } = ReviewSchema.validate(req.body.review);
+  if (error) {
+    let msg = error.details.map((el) => el.message).join(",");
+    throw new CustomError(400, msg);
+  } else {
+    next();
+  }
+};
+
+module.exports = { isLoggedIn, redirectUrl, isOwner, validateListing, validateReview, };
