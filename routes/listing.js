@@ -4,7 +4,7 @@ const Listing = require("../models/listing.js");
 const wrapAsync = require("../utils/wrapAsync.js");
 const CustomError = require("../utils/CustomError.js");
 const { ListingSchema } = require("../schema.js");
-const { isLoggedIn } = require("../middleware.js");
+const { isLoggedIn, isOwner } = require("../middleware.js");
 
 const validateListing = (req, res, next) => {
   let { error } = ListingSchema.validate(req.body.listing);
@@ -77,6 +77,7 @@ router.get(
 router.get(
   "/edit/:id",
   isLoggedIn,
+  isOwner,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     Listing.findById(id).then((listing) => {
@@ -88,21 +89,13 @@ router.get(
 router.put(
   "/edit/:id",
   isLoggedIn, //Checking for logged in this route(similiar) to avoid third party request as like from "hoppscotch"
+  isOwner,
   validateListing,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
-    Listing.findByIdAndUpdate(
-      id,
-      { $set: req.body.listing },
-      { new: true, runValidators: true }
-    )
-      .then((result) => {
-        req.flash("success", "Successfully Updated the Listing!");
-        res.redirect(`/listings/${id}`);
-      })
-      .catch((err) => {
-        console.log("error find in updation", err);
-      });
+    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    req.flash("success", "Successfully Updated the Listing!");
+    res.redirect(`/listings/${id}`);
   })
 );
 
@@ -110,6 +103,7 @@ router.put(
 router.delete(
   "/delete/:id",
   isLoggedIn,
+  isOwner,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     Listing.findByIdAndDelete(id)
