@@ -27,6 +27,8 @@
           <%= listing.location %>, <%= listing.country %>
         </div>
 
+        <% if (currUser && listing.owner._id.equals(currUser._id)) { %>
+        <!-- can fetch "currUser" from res.locals-->
         <div class="d-flex justify-content-center flex-wrap">
           <form action="/listings/edit/<%= listing._id %>" method="get">
             <button class="wanderlust-btn edit-btn">Edit Listing</button>
@@ -38,6 +40,7 @@
             <button class="wanderlust-btn delete-btn">Delete Listing</button>
           </form>
         </div>
+        <% } %>
       </div>
       <hr />
 
