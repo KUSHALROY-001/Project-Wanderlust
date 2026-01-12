@@ -17,6 +17,9 @@
       />
       <div class="wanderlust-body">
         <h3 class="wanderlust-heading"><%= listing.title %></h3>
+        <p>
+          Owned by <i><b> <%= listing.owner.username %></b></i>
+        </p>
         <p class="wanderlust-desc"><%= listing.description %></p>
 
         <div class="wanderlust-price">$<%= listing.price %>/week</div>
@@ -24,6 +27,8 @@
           <%= listing.location %>, <%= listing.country %>
         </div>
 
+        <% if (currUser && listing.owner._id.equals(currUser._id)) { %>
+        <!-- can fetch "currUser" from res.locals-->
         <div class="d-flex justify-content-center flex-wrap">
           <form action="/listings/edit/<%= listing._id %>" method="get">
             <button class="wanderlust-btn edit-btn">Edit Listing</button>
@@ -35,28 +40,36 @@
             <button class="wanderlust-btn delete-btn">Delete Listing</button>
           </form>
         </div>
+        <% } %>
       </div>
       <hr />
 
       <h3><b>All Reviews</b></h3>
-      <div class="row ">
+      <div class="row">
         <% listing.reviews.forEach(function(review) { %>
         <div class="mb-3 col-6">
           <div class="card review-card">
             <div class="card-body">
+              <h4><i><%= review.owner.username %></i></h4>
               <h5 class="card-title">Rating: <%= review.rating %>/5</h5>
               <p class="card-text"><%= review.comment %></p>
-              <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="post">
+              <% if (currUser && review.owner._id.equals(currUser._id)) { %>
+              <form
+                action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+                method="post"
+              >
                 <button class="wanderlust-btn delete-review-btn">
                   Delete Review
                 </button>
               </form>
+              <% } %>
             </div>
           </div>
         </div>
         <% }); %>
       </div>
 
+      <% if (currUser) { %>
       <div class="review">
         <h3>Leave a Review</h3>
         <form
@@ -88,6 +101,11 @@
           <button class="wanderlust-btn review-btn">Submit</button>
         </form>
       </div>
+      <% } else {%>
+      <br />
+      <h4>Please log in to leave a review</h4>
+      <br />
+      <% } %>
     </div>
   </div>
 </body>

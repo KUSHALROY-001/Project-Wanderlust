@@ -45,7 +45,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
-  // console.log(res.session);
+  res.locals.currUser = req.user;
   next();
 });
 
@@ -72,6 +72,7 @@ app.use("/", userRouter);
 // Catch-all for unmatched routes. Use `app.use` instead of `app.all("*", ...)`
 // to avoid path-to-regexp parsing errors for bare `*` patterns.
 app.use((req, res, next) => {
+  console.log(req.originalUrl);
   next(new CustomError(404, "Page Not Found"));
 });
 // ========== MiddleWare =========
