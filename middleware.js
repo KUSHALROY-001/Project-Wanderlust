@@ -7,7 +7,7 @@ const isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
     //isAuthenticated() is a passport method
     req.session.redirectUrl = req.originalUrl;
-    req.flash("error", "Please log in to create listing");
+    req.flash("error", "Log in required to do that thing!");
     return res.redirect("/login");
   }
   next();

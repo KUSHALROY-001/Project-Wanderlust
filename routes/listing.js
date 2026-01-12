@@ -50,7 +50,13 @@ router.get(
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id)
-      .populate("reviews")
+      .populate({
+        //This proccess is for nested populate
+        path: "reviews",
+        populate: {
+          path: "owner",
+        },
+      })
       .populate("owner");
     if (!listing) {
       req.flash("error", "Cannot find that listing!");

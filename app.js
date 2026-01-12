@@ -72,6 +72,7 @@ app.use("/", userRouter);
 // Catch-all for unmatched routes. Use `app.use` instead of `app.all("*", ...)`
 // to avoid path-to-regexp parsing errors for bare `*` patterns.
 app.use((req, res, next) => {
+  console.log(req.originalUrl);
   next(new CustomError(404, "Page Not Found"));
 });
 // ========== MiddleWare =========

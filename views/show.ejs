@@ -50,6 +50,7 @@
         <div class="mb-3 col-6">
           <div class="card review-card">
             <div class="card-body">
+              <h4><i><%= review.owner.username %></i></h4>
               <h5 class="card-title">Rating: <%= review.rating %>/5</h5>
               <p class="card-text"><%= review.comment %></p>
               <form
@@ -66,6 +67,7 @@
         <% }); %>
       </div>
 
+      <% if (currUser) { %>
       <div class="review">
         <h3>Leave a Review</h3>
         <form
@@ -97,6 +99,11 @@
           <button class="wanderlust-btn review-btn">Submit</button>
         </form>
       </div>
+      <% } else {%>
+      <br />
+      <h4>Please log in to leave a review</h4>
+      <br />
+      <% } %>
     </div>
   </div>
 </body>
