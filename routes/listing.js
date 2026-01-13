@@ -8,33 +8,28 @@ const listingController = require("../controllers/listing.js");
 router.get("/", wrapAsync(listingController.homePage));
 
 // New Route
-router.get("/new", isLoggedIn, listingController.getNewListing);
-
-router.post(
-  "/new",
-  isLoggedIn,
-  validateListing,
-  wrapAsync(listingController.postNewListing)
-);
+router //Use router.route() to avoid duplicate route naming and thus typing errors.
+  .route("/new")
+  .get(isLoggedIn, listingController.getNewListing)
+  .post(
+    isLoggedIn,
+    validateListing,
+    wrapAsync(listingController.postNewListing)
+  );
 
 // Show route
 router.get("/:id", wrapAsync(listingController.showListing));
 
 // Edit Route
-router.get(
-  "/edit/:id",
-  isLoggedIn,
-  isOwner,
-  wrapAsync(listingController.editListing)
-);
-
-router.put(
-  "/edit/:id",
-  isLoggedIn, //Checking for logged in this route(similiar) to avoid third party request as like from "hoppscotch"
-  isOwner,
-  validateListing,
-  wrapAsync(listingController.updateListing)
-);
+router
+  .route("/edit/:id")
+  .get(isLoggedIn, isOwner, wrapAsync(listingController.editListing))
+  .put(
+    isLoggedIn, //Checking for logged in this route(similiar) to avoid third party request as like from "hoppscotch"
+    isOwner,
+    validateListing,
+    wrapAsync(listingController.updateListing)
+  );
 
 // Delete Route
 router.delete(
