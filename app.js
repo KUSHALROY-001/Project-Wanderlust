@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV != "production") {
+  require("dotenv").config();
+}
 const express = require("express");
 const mongoose = require("mongoose");
 const ejs = require("ejs");
@@ -14,6 +17,8 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 const CustomError = require("./utils/CustomError.js");
+const multer = require("multer"); /* We can't directly extract the file from the "multipart/form-data" enctype so we use multer package for that*/
+const upload = multer({ dest: "uploads/" });
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
