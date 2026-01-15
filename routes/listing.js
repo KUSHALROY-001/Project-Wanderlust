@@ -3,6 +3,9 @@ const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
 const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
 const listingController = require("../controllers/listing.js");
+const multer = require("multer"); /* We can't directly extract the file from the "multipart/form-data" enctype so we use multer package for that*/
+const { storage } = require("../cloudConfig.js");
+const upload = multer({ storage });
 
 // All Listing Route
 router.get("/", wrapAsync(listingController.homePage));
