@@ -16,6 +16,7 @@ router //Use router.route() to avoid duplicate route naming and thus typing erro
   .get(isLoggedIn, listingController.getNewListing)
   .post(
     isLoggedIn,
+    upload.single("listing[image]"), //Middleware to handle the file upload from the form. "listing[image]" is the name attribute in the form input field.
     validateListing,
     wrapAsync(listingController.postNewListing)
   );

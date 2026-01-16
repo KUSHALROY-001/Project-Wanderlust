@@ -1,6 +1,7 @@
 if (process.env.NODE_ENV != "production") {
   require("dotenv").config();
 }
+require("./cloudConfig.js"); // Initialize Cloudinary
 const express = require("express");
 const mongoose = require("mongoose");
 const ejs = require("ejs");

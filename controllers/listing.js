@@ -16,18 +16,16 @@ module.exports.getNewListing = (req, res) => {
 };
 
 module.exports.postNewListing = async (req, res, next) => {
+  const url = req.file.url; // Cloudinary returns the full URL in 'url'
+  const filename = req.file.public_id; // Cloudinary returns the public ID in 'filename'
+  req.body.listing.image = { url, filename };
   console.log(req.body.listing);
   const newListing = req.body.listing;
   newListing.owner = req.user._id;
-  Listing.create(newListing)
-    .then((result) => {
-      console.log(result);
-      req.flash("success", "Successfully Created a new Listing!");
-      res.redirect("/listings");
-    })
-    .catch((err) => {
-      next(new CustomError(400, "Invalid Listing Data"));
-    });
+  const listing = new Listing(newListing);
+  await listing.save();
+  req.flash("success", "Successfully Created a New Listing!");
+  res.redirect(`/listings/${listing._id}`);
 };
 
 module.exports.showListing = async (req, res) => {
