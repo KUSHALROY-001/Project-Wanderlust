@@ -22,7 +22,8 @@ const listSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: String,
+    url: String,
+    filename: String,
   },
   price: {
     type: Number,
@@ -37,14 +38,16 @@ const listSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  reviews: [{
+  reviews: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Review",
+    },
+  ],
+  owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Review",
-  }],
-  owner : {
-    type : mongoose.Schema.Types.ObjectId,
-    ref : "User"
-  }
+    ref: "User",
+  },
 });
 
 listSchema.post("findOneAndDelete", async function (listing) {
