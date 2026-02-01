@@ -19,11 +19,32 @@ module.exports.postNewListing = async (req, res, next) => {
   const url = req.file.url; // Cloudinary returns the full URL in 'url'
   const filename = req.file.public_id; // Cloudinary returns the public ID in 'filename'
   req.body.listing.image = { url, filename };
-  console.log(req.body.listing);
   const newListing = req.body.listing;
   newListing.owner = req.user._id;
+
+  const location = req.body.listing.location;
+
+  const response = await fetch(
+    `https://nominatim.openstreetmap.org/search?format=json&q=${location}`,
+  );
+
+  const data = await response.json();
+
+  if (!data.length) {
+    return res.send("Location not found");
+  }
+
+  const lat = parseFloat(data[0].lat);
+  const lng = parseFloat(data[0].lon);
+
+  newListing.geometry = {
+    type: "Point",
+    coordinates: [lng, lat],
+  };
   const listing = new Listing(newListing);
-  await listing.save();
+
+  let theListing = await listing.save();
+  console.log(theListing);
   req.flash("success", "Successfully Created a New Listing!");
   res.redirect(`/listings/${listing._id}`);
 };
