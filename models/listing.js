@@ -34,6 +34,17 @@ const listSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  geometry: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      required: true,
+    },
+    coordinates: {
+      type: [Number], // [lng, lat]
+      required: true,
+    },
+  },
   country: {
     type: String,
     required: true,

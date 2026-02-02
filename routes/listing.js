@@ -18,7 +18,7 @@ router //Use router.route() to avoid duplicate route naming and thus typing erro
     isLoggedIn,
     upload.single("listing[image]"), //Middleware to handle the file upload from the form. "listing[image]" is the name attribute in the form input field.
     validateListing,
-    wrapAsync(listingController.postNewListing)
+    wrapAsync(listingController.postNewListing),
   );
 
 // Show route
@@ -31,8 +31,9 @@ router
   .put(
     isLoggedIn, //Checking for logged in this route(similiar) to avoid third party request as like from "hoppscotch"
     isOwner,
+    upload.single("listing[image]"),
     validateListing,
-    wrapAsync(listingController.updateListing)
+    wrapAsync(listingController.updateListing),
   );
 
 // Delete Route
@@ -40,7 +41,7 @@ router.delete(
   "/delete/:id",
   isLoggedIn,
   isOwner,
-  wrapAsync(listingController.destroyListing)
+  wrapAsync(listingController.destroyListing),
 );
 
 module.exports = router;
