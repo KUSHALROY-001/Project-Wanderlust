@@ -159,6 +159,7 @@
   <script>
     // Pass listing coordinates to the map script
     window.listingCoordinates = <%- JSON.stringify(listing.geometry.coordinates) %>;
+    window.listingLocation = "<%= listing.location %>";
   </script>
   <script src="/js/map.js"></script>
 </body>
