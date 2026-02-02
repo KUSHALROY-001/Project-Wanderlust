@@ -1,11 +1,13 @@
-// Initialize map
-let map = L.map("map").setView([22.5726, 88.3639], 13);
+const coordinates = window.listingCoordinates;
+// GeoJSON order: [lng, lat]
 
-// Add OpenStreetMap tiles
+const map = L.map("map").setView([coordinates[1], coordinates[0]], 10);
+
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "© OpenStreetMap contributors",
 }).addTo(map);
 
-// Marker
-let marker = L.marker([22.5726, 88.3639]).addTo(map);
-marker.bindPopup("<b>Kolkata</b><br>Web Dev Project").openPopup();
+L.geoJSON({
+  type: "Point",
+  coordinates: coordinates,
+}).addTo(map);
