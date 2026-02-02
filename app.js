@@ -36,7 +36,7 @@ app.use(
       expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     },
-  })
+  }),
 );
 app.use(flash());
 
@@ -65,10 +65,7 @@ main()
     console.log("Unable to connect to Mongodb : ", err);
   });
 
-app.get("/", (req, res) => {
-  res.send("It is the index Route");
-});
-
+// ========== Routes ==========
 app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
 app.use("/", userRouter);
