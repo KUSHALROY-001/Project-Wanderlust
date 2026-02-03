@@ -36,6 +36,20 @@ body {
   color: #222222 !important;
 }
 
+.search-input {
+  border-radius: 1.5rem;
+  padding: 5px 15px;
+  border: 1px solid #ccc;
+}
+
+.search-btn {
+  border-radius: 1.25rem;
+  padding: 5px 11px;
+  background-color: #fe424d;
+  color: white;
+  border: none;
+}
+
 /* === Footer Base === */
 .footer {
   background-color: #1f1f1f;
@@ -161,7 +175,7 @@ body {
 /* Filters Section */
 #filters {
   display: flex;
-  gap: 20px;
+  gap: 0.7rem;
   overflow-x: auto;
   padding: 10px 0;
   justify-content: center;

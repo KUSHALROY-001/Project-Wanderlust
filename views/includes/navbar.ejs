@@ -17,7 +17,19 @@
         <a class="nav-link" href="/listings">All Listings</a>
       </div>
       <div class="navbar-nav ms-auto">
-        <a class="nav-link" href="/listings/new">Add Your AirBNB</a>
+        <form class="d-flex" role="search" action="" method="GET">
+          <input
+            class="form-control me-2 search-input"
+            type="search"
+            name="query"
+            placeholder="Search listings"
+            aria-label="Search"
+          />
+          <button class="btn btn-outline-success search-btn" type="submit" style="display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+        </form>
+      </div>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/listings/new">Become a host</a>
         <% if (!currUser) { %>
         <a class="nav-link" aria-current="page" href="/signup"><b>Sign up</b> <i class="fa-solid fa-arrow-right-to-bracket"></i></a>
         <a class="nav-link" href="/login"><b>Log in</b> <i class="fas fa-sign-in-alt"></i></a>
