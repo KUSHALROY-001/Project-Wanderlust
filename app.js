@@ -28,7 +28,7 @@ app.engine("ejs", ejsMate);
 
 app.use(
   session({
-    secret: "wanderlustsecret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -53,8 +53,10 @@ app.use((req, res, next) => {
   next();
 });
 
+const mongoUrl = process.env.MONGODB_URL;
+
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
+  await mongoose.connect(mongoUrl);
 }
 
 main()
