@@ -28,7 +28,7 @@ app.engine("ejs", ejsMate);
 
 app.use(
   session({
-    secret: "wanderlustsecret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -36,7 +36,7 @@ app.use(
       expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     },
-  })
+  }),
 );
 app.use(flash());
 
@@ -53,8 +53,10 @@ app.use((req, res, next) => {
   next();
 });
 
+const mongoUrl = process.env.MONGODB_URL;
+
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
+  await mongoose.connect(mongoUrl);
 }
 
 main()
@@ -65,10 +67,7 @@ main()
     console.log("Unable to connect to Mongodb : ", err);
   });
 
-app.get("/", (req, res) => {
-  res.send("It is the index Route");
-});
-
+// ========== Routes ==========
 app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
 app.use("/", userRouter);

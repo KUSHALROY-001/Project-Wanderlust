@@ -36,6 +36,20 @@ body {
   color: #222222 !important;
 }
 
+.search-input {
+  border-radius: 1.5rem;
+  padding: 5px 15px;
+  border: 1px solid #ccc;
+}
+
+.search-btn {
+  border-radius: 1.25rem;
+  padding: 5px 11px;
+  background-color: #fe424d;
+  color: white;
+  border: none;
+}
+
 /* === Footer Base === */
 .footer {
   background-color: #1f1f1f;
@@ -156,4 +170,52 @@ body {
   height: 500px;
   width: 100%;
   border-radius: 10px;
+}
+
+/* Filters Section */
+#filters {
+  display: flex;
+  gap: 0.7rem;
+  overflow-x: auto;
+  padding: 10px 0;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+  cursor: pointer;
+  opacity: 0.75;
+}
+
+.filter div {
+  font-size: 1.5rem;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.filter p {
+  margin: 0;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.filter:hover {
+  transform: scale(1.1);
+  opacity: 1;
+  transition:
+    transform 0.2s,
+    opacity 0.2s;
 }

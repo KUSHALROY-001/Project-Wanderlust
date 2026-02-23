@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md bg-body-tertiary border-bottom sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/"><i class="fa-regular fa-compass"></i></a>
+    <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
     <button
       class="navbar-toggler"
       type="button"
@@ -14,16 +14,27 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link" aria-current="page" href="/">Home</a>
         <a class="nav-link" href="/listings">All Listings</a>
-        <a class="nav-link" href="/listings/new">Add new Listing</a>
       </div>
       <div class="navbar-nav ms-auto">
+        <form class="d-flex" role="search" action="" method="GET">
+          <input
+            class="form-control me-2 search-input"
+            type="search"
+            name="query"
+            placeholder="Search listings"
+            aria-label="Search"
+          />
+          <button class="btn btn-outline-success search-btn" type="submit" style="display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+        </form>
+      </div>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/listings/new">Become a host</a>
         <% if (!currUser) { %>
-        <a class="nav-link" aria-current="page" href="/signup">Sign up <i class="fa-solid fa-arrow-right-to-bracket"></i></i></a>
-        <a class="nav-link" href="/login">Log in <i class="fas fa-sign-in-alt"></i></a>
+        <a class="nav-link" aria-current="page" href="/signup"><b>Sign up</b> <i class="fa-solid fa-arrow-right-to-bracket"></i></a>
+        <a class="nav-link" href="/login"><b>Log in</b> <i class="fas fa-sign-in-alt"></i></a>
         <% } else { %>
-        <a class="nav-link" href="/logout">Log out <i class="fas fa-sign-out-alt"></i></a>
+        <a class="nav-link" href="/logout"><b>Log out</b> <i class="fas fa-sign-out-alt"></i></a>
         <% } %>
       </div>
     </div>

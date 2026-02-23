@@ -1,165 +1,227 @@
-<head>
-  <title>Explore with Wanderlust</title>
-  <link rel="stylesheet" href="/css/show.css" />
-</head>
-<body>
-  <% layout("/layouts/boilerplate.ejs") %>
-  <div class="wanderlust-page container text-center">
-    <h1 class="wanderlust-title">Explore with Wanderlust</h1>
-    <p class="wanderlust-subtext">
+<% layout("/layouts/boilerplate.ejs") %>
+
+<div class="container wanderlust-page py-4">
+  <!-- Page header -->
+  <div class="text-center mb-4">
+    <h1 class="wanderlust-title mb-2">Explore with Wanderlust</h1>
+    <p class="wanderlust-subtext mb-0">
       Find your next dream escape around the world 🌍
     </p>
-    <div class="wanderlust-card mx-auto">
-      <img
-        src="<%= listing.image.url %>"
-        alt="listing image"
-        class="wanderlust-img"
-      />
-      <div class="wanderlust-body">
-        <h3 class="wanderlust-heading"><%= listing.title %></h3>
-        <p>
-          Owned by <i><b> <%= listing.owner.username %></b></i>
-        </p>
-        <p class="wanderlust-desc"><%= listing.description %></p>
+  </div>
 
-        <div class="wanderlust-price">$<%= listing.price %>/week</div>
-        <div class="wanderlust-location">
-          <%= listing.location %>, <%= listing.country %>
+  <!-- Listing main content -->
+  <div class="wanderlust-card mx-auto shadow-sm rounded-4 p-3 p-md-4">
+    <div class="row g-4 align-items-start">
+      <!-- Image -->
+      <div class="col-12 col-lg-6">
+        <div class="ratio ratio-4x3 rounded-4 overflow-hidden wanderlust-image-wrapper">
+          <img
+            src="<%= listing.image.url %>"
+            alt="<%= listing.title %> image"
+            class="wanderlust-img img-fluid w-100 h-100 object-fit-cover"
+          />
         </div>
-
-        <% if (currUser && listing.owner._id.equals(currUser._id)) { %>
-        <!-- can fetch "currUser" from res.locals-->
-        <div class="d-flex justify-content-center flex-wrap">
-          <form action="/listings/edit/<%= listing._id %>" method="get">
-            <button class="wanderlust-btn edit-btn">Edit Listing</button>
-          </form>
-          <form
-            action="/listings/delete/<%= listing._id %>?_method=DELETE"
-            method="post"
-          >
-            <button class="wanderlust-btn delete-btn">Delete Listing</button>
-          </form>
-        </div>
-        <% } %>
       </div>
-      <hr />
 
-      <% if (listing.reviews.length !== 0) { %>  
-      <div class="row">
-        <h3><b>All Reviews</b></h3>
-        <% listing.reviews.forEach(function(review) { %>
-        <div class="mb-3 col-6">
-          <div class="card review-card">
-            <div class="card-body">
-              <h4><i><%= review.owner.username %></i></h4>
-              <p
-                class="starability-result card-title"
-                data-rating="<%= review.rating %>"
-              ></p>
-              <p class="card-text"><%= review.comment %></p>
-              <% if (currUser && review.owner._id.equals(currUser._id)) { %>
-              <form
-                action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
-                method="post"
-              >
-                <button class="wanderlust-btn delete-review-btn">
-                  Delete Review
-                </button>
-              </form>
-              <% } %>
-            </div>
+      <!-- Details + map -->
+      <div class="col-12 col-lg-6">
+        <div class="wanderlust-body text-start">
+          <h2 class="wanderlust-heading mb-2"><%= listing.title %></h2>
+          <p class="mb-1 text-muted">
+            Hosted by <i><b><%= listing.owner.username %></b></i>
+          </p>
+          <p class="wanderlust-location mb-2">
+            <span class="fw-semibold">Location:</span>
+            <%= listing.location %>, <%= listing.country %>
+          </p>
+
+          <div class="d-flex align-items-baseline gap-2 mb-3">
+            <span class="wanderlust-price h4 mb-0">$<%= listing.price %></span>
+            <span class="text-muted small">per week</span>
+          </div>
+
+          <p class="wanderlust-desc mb-3"><%= listing.description %></p>
+
+          <% if (currUser && listing.owner._id.equals(currUser._id)) { %>
+          <!-- Owner actions -->
+          <div class="d-flex flex-wrap gap-2 mb-4">
+            <form action="/listings/edit/<%= listing._id %>" method="get">
+              <button class="wanderlust-btn edit-btn btn btn-outline-primary btn-sm">
+                Edit listing
+              </button>
+            </form>
+            <form
+              action="/listings/delete/<%= listing._id %>?_method=DELETE"
+              method="post"
+              onsubmit="return confirm('Are you sure you want to delete this listing?');"
+            >
+              <button class="wanderlust-btn delete-btn btn btn-outline-danger btn-sm">
+                Delete listing
+              </button>
+            </form>
+          </div>
+          <% } %>
+
+          <!-- Map -->
+          <div class="mt-3">
+            <h5 class="mb-2">Location on map</h5>
+            <div
+              id="map"
+              class="wanderlust-map rounded-4"
+              role="region"
+              aria-label="Map showing the location of <%= listing.title %>"
+            ></div>
           </div>
         </div>
-        <% }); %>
       </div>
-      <% } %>
-
-      <% if (currUser) { %>
-      <div class="review">
-        <h3>Leave a Review</h3>
-        <form
-          action="/listings/<%= listing._id %>/reviews"
-          method="post"
-          novalidate
-          class="needs-validation"
-        >
-          <div>
-            <label for="rating" class="form-label">Rating</label>
-            <fieldset class="starability-slot">
-              <!-- Code from "Starability" on gitHub-->
-              <input
-                type="radio"
-                id="no-rate"
-                class="input-no-rate"
-                name="review[rating]"
-                value="1"
-                checked
-                aria-label="No rating."
-              />
-              <input
-                type="radio"
-                id="first-rate1"
-                name="review[rating]"
-                value="1"
-              />
-              <label for="first-rate1" title="Terrible">1 star</label>
-              <input
-                type="radio"
-                id="first-rate2"
-                name="review[rating]"
-                value="2"
-              />
-              <label for="first-rate2" title="Not good">2 stars</label>
-              <input
-                type="radio"
-                id="first-rate3"
-                name="review[rating]"
-                value="3"
-              />
-              <label for="first-rate3" title="Average">3 stars</label>
-              <input
-                type="radio"
-                id="first-rate4"
-                name="review[rating]"
-                value="4"
-              />
-              <label for="first-rate4" title="Very good">4 stars</label>
-              <input
-                type="radio"
-                id="first-rate5"
-                name="review[rating]"
-                value="5"
-              />
-              <label for="first-rate5" title="Amazing">5 stars</label>
-            </fieldset>
-          </div>
-          <div>
-            <label for="comment" class="form-label">Comments</label> <br />
-            <textarea
-              name="review[comment]"
-              id="comment"
-              required
-              class="form-control"
-            ></textarea>
-            <div class="invalid-feedback">Please enter a comment.</div>
-          </div>
-          <button class="wanderlust-btn review-btn">Submit</button>
-        </form>
-      </div>
-      <% } else {%>
-      <br />
-      <h4>Please log in to leave a review</h4>
-      <br />
-      <% } %>
-      <br><br>
-      <div id="map"></div>
     </div>
   </div>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script>
-    // Pass listing coordinates to the map script
-    window.listingCoordinates = <%- JSON.stringify(listing.geometry.coordinates) %>;
-    window.listingLocation = "<%= listing.location %>";
-  </script>
-  <script src="/js/map.js"></script>
-</body>
+
+  <!-- Reviews section -->
+  <section class="mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3 class="mb-0">Guest reviews</h3>
+      <span class="text-muted small">
+        <%= listing.reviews.length %> review<%= listing.reviews.length === 1 ? '' : 's' %>
+      </span>
+    </div>
+
+    <% if (listing.reviews.length !== 0) { %>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      <% listing.reviews.forEach(function(review) { %>
+      <div class="col">
+        <div class="card review-card h-100 shadow-sm border-0">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <h5 class="mb-0"><i><%= review.owner.username %></i></h5>
+            </div>
+            <p
+              class="starability-result card-title mb-2"
+              data-rating="<%= review.rating %>"
+            ></p>
+            <p class="card-text mb-3"><%= review.comment %></p>
+
+            <% if (currUser && review.owner._id.equals(currUser._id)) { %>
+            <form
+              action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+              method="post"
+              onsubmit="return confirm('Delete this review?');"
+            >
+              <button class="wanderlust-btn delete-review-btn btn btn-sm btn-outline-danger">
+                Delete review
+              </button>
+            </form>
+            <% } %>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+    <% } else { %>
+    <div class="text-center py-4 bg-light rounded-4">
+      <h5 class="mb-1">No reviews yet</h5>
+      <p class="text-muted mb-0">
+        Be the first to share your experience of <%= listing.title %>.
+      </p>
+    </div>
+    <% } %>
+  </section>
+
+  <!-- Review form / login prompt -->
+  <section class="mt-5">
+    <% if (currUser) { %>
+    <div class="review mx-auto" style="max-width: 640px;">
+      <h3 class="mb-3">Leave a review</h3>
+      <form
+        action="/listings/<%= listing._id %>/reviews"
+        method="post"
+        novalidate
+        class="needs-validation"
+      >
+        <div class="mb-3">
+          <label for="rating" class="form-label">Rating</label>
+          <fieldset class="starability-slot" aria-label="Star rating">
+            <!-- Code from "Starability" on gitHub -->
+            <input
+              type="radio"
+              id="no-rate"
+              class="input-no-rate"
+              name="review[rating]"
+              value="1"
+              checked
+              aria-label="No rating."
+            />
+            <input
+              type="radio"
+              id="first-rate1"
+              name="review[rating]"
+              value="1"
+            />
+            <label for="first-rate1" title="Terrible">1 star</label>
+            <input
+              type="radio"
+              id="first-rate2"
+              name="review[rating]"
+              value="2"
+            />
+            <label for="first-rate2" title="Not good">2 stars</label>
+            <input
+              type="radio"
+              id="first-rate3"
+              name="review[rating]"
+              value="3"
+            />
+            <label for="first-rate3" title="Average">3 stars</label>
+            <input
+              type="radio"
+              id="first-rate4"
+              name="review[rating]"
+              value="4"
+            />
+            <label for="first-rate4" title="Very good">4 stars</label>
+            <input
+              type="radio"
+              id="first-rate5"
+              name="review[rating]"
+              value="5"
+            />
+            <label for="first-rate5" title="Amazing">5 stars</label>
+          </fieldset>
+        </div>
+
+        <div class="mb-3">
+          <label for="comment" class="form-label">Your experience</label>
+          <textarea
+            name="review[comment]"
+            id="comment"
+            required
+            class="form-control"
+            rows="3"
+            placeholder="Share what you loved (or didn’t) about this place..."
+          ></textarea>
+          <div class="invalid-feedback">Please enter a comment.</div>
+        </div>
+
+        <button class="wanderlust-btn review-btn btn btn-primary">
+          Submit review
+        </button>
+      </form>
+    </div>
+    <% } else { %>
+    <div class="text-center py-4">
+      <h4 class="mb-2">Please log in to leave a review</h4>
+      <p class="text-muted mb-0">
+        Reviews help other travellers choose the perfect stay.
+      </p>
+    </div>
+    <% } %>
+  </section>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  // Pass listing coordinates to the map script
+  window.listingCoordinates = <%- JSON.stringify(listing.geometry.coordinates) %>;
+  window.listingLocation = "<%= listing.location %>";
+</script>
+<script src="/js/map.js"></script>

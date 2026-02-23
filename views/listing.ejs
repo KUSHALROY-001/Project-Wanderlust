@@ -3,8 +3,50 @@
 </head>
 <body>
   <% layout("/layouts/boilerplate.ejs") %>
-  <h3>All Listings</h3>
-  <br />
+  
+  <div id="filters">
+    <div class="filter">
+      <div><i class="fa-solid fa-fire"></i></i></div>
+      <p>Trending</p>
+    </div>
+    <div class="filter">
+      <div><i class="fa-solid fa-mountain"></i></div>
+      <p>Mountain</p>
+    </div>
+    <div class="filter">
+      <div><i class="fa-brands fa-fort-awesome"></i></div>
+      <p>Castle</p>
+    </div>
+    <div class="filter">
+      <div><i class="fa-solid fa-umbrella-beach"></i></div>
+      <p>Sea Beach</p>
+    </div>
+    <div class="filter">
+      <div><i class="fa-solid fa-tree"></i></div>
+      <p>Forest</p>
+    </div>
+    <div class="filter">
+      <div><i class="fa-solid fa-swimming-pool"></i></div>
+      <p>Pool</p>
+    </div>
+    <div class="filter">
+      <div><i class="fa-solid fa-city"></i></div>
+      <p>Iconic Cities</p>
+    </div>
+    <div class="filter">
+      <div><i class="fa-solid fa-campground"></i></div>
+      <p>Camping</p>
+    </div>
+    <div class="filter">
+      <div><i class="fa-solid fa-cow"></i></div>
+      <p>Farms</p>
+    </div>
+    <div class="filter">
+      <div><i class="fa-solid fa-snowman"></i></div>
+      <p>Arctic</p>
+    </div>
+  </div>
+
   <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-2">
     <% for(listing of allListing) { %>
     <a href="/listings/<%= listing._id %>" class="listing-link">
